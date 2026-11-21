@@ -6,6 +6,10 @@
   <meta name="theme-color" content="#080c16" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="EjariFlow" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
   <meta name="description" content="EjariFlow — an interactive, mobile-first presentation of two WhatsApp-to-Ejari automation architectures, workflows, simulation and costs." />
   <title>EjariFlow — Intelligent Ejari, beautifully simple.</title>
   <style>
@@ -76,6 +80,47 @@
     /* Block the whole screen from inadvertently capturing taps via decorative layers. */
     .backdrop,.aurora,.orb,.orb-ring,.float-card,.scan-beam,.browser-cursor,.line-arrow{pointer-events:none}
 
+
+    /* iPhone viewport stabilization — slides and controls occupy separate vertical zones. */
+    .immersive-trigger{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(151,208,255,.26);border-radius:99px;background:rgba(120,179,238,.1);color:#e0f3ff;padding:9px 12px;font-size:14px;font-weight:740;white-space:nowrap;min-height:40px}
+    .immersive-trigger:hover{background:rgba(120,179,238,.2)}
+    .immersive-label{font-size:11px}
+    .immersive-dialog[hidden]{display:none!important}
+    .immersive-dialog{position:fixed;inset:0;z-index:150;display:grid;place-items:center;padding:24px max(22px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px));background:rgba(5,9,21,.83);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px)}
+    .immersive-panel{width:min(100%,460px);border-radius:28px;background:linear-gradient(155deg,#1d2b43,#0b1325);border:1px solid rgba(176,221,255,.28);padding:25px;box-shadow:0 28px 90px rgba(0,0,0,.55);color:#f3f8ff;position:relative}
+    .immersive-panel h3{font-size:27px;line-height:1.1;letter-spacing:-.035em;margin:10px 0 13px}
+    .immersive-panel p{font-size:13px;line-height:1.6;color:#bdd2ed;margin:0 0 14px}
+    .immersive-panel ol{padding-left:22px;margin:14px 0 22px;color:#d5e8ff;font-size:13px;line-height:1.85}
+    .immersive-panel li{padding-left:3px}
+    .immersive-panel .emphasis{color:#a2ffe4;font-weight:800}
+    .immersive-close{border:0;border-radius:100px;background:linear-gradient(120deg,#8dffdf,#8abfff);color:#06131e;padding:13px 18px;font-weight:800;width:100%;min-height:46px}
+    @media(max-width:700px){
+      :root{--ef-header-height:60px;--ef-nav-reserve:78px}
+      html,body{overflow:hidden;width:100%;height:100%;overscroll-behavior:none}
+      .app{height:100vh;height:100dvh;min-height:0;overflow:hidden}
+      .topbar{top:0;bottom:auto;height:calc(var(--ef-header-height) + env(safe-area-inset-top,0px));padding:calc(11px + env(safe-area-inset-top,0px)) 16px 10px;background:linear-gradient(180deg,rgba(8,12,22,.97),rgba(8,12,22,.92));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+      .brand{font-size:17px;letter-spacing:-.035em}.brand-logo{height:29px;width:29px;flex-shrink:0}
+      .top-right{gap:7px}.top-chip{display:none}.immersive-trigger{min-height:38px;padding:7px 10px;font-size:18px}.immersive-label{display:none}
+      .progress-track{top:calc(var(--ef-header-height) + env(safe-area-inset-top,0px));height:2px}
+      .slides{top:calc(var(--ef-header-height) + env(safe-area-inset-top,0px) + 2px);bottom:calc(var(--ef-nav-reserve) + env(safe-area-inset-bottom,0px));overflow:hidden}
+      .slide{inset:0;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;scroll-padding-top:15px}
+      .slide-inner{min-height:100%;padding:17px 19px 22px;justify-content:flex-start;gap:18px}
+      .slide-inner.tight{gap:14px}
+      .bottom-nav{position:absolute;bottom:calc(7px + env(safe-area-inset-bottom,0px));width:calc(100% - 28px);max-width:460px;min-height:61px;z-index:80}
+      .display{font-size:clamp(39px,10.7vw,60px)}
+      .display.small,.display.medium{font-size:clamp(31px,8.5vw,51px)}
+      .nojs-nav{margin-bottom:0}
+    }
+    /* On iPhones held landscape, keep the title and controls clear of safe areas. */
+    @media (hover:none) and (orientation:landscape) and (max-height:550px){
+      .topbar{height:calc(49px + env(safe-area-inset-top,0px));padding:calc(7px + env(safe-area-inset-top,0px)) calc(15px + env(safe-area-inset-left,0px)) 7px calc(15px + env(safe-area-inset-right,0px))}
+      .progress-track{top:calc(49px + env(safe-area-inset-top,0px))}
+      .slides{top:calc(51px + env(safe-area-inset-top,0px));bottom:calc(66px + env(safe-area-inset-bottom,0px))}
+      .slide-inner{padding:13px max(24px,env(safe-area-inset-left,0px)) 20px;justify-content:flex-start}
+      .bottom-nav{bottom:calc(5px + env(safe-area-inset-bottom,0px));min-height:53px}
+      .hero-visual{min-height:280px}
+    }
+    @media(display-mode:standalone){.app{height:100dvh}.immersive-trigger{display:none}}
   </style>
 </head>
 <body>
@@ -84,7 +129,7 @@
 <div class="nojs-warning" role="status">Preview mode: slide links below work without scripts. To use the animated simulation, route switcher and live calculator, open this presentation from an <b>HTTPS website in Safari or Chrome</b> rather than iPhone Files / ChatGPT document preview.</div>
 <header class="topbar">
   <div class="brand"><span class="brand-logo" aria-hidden="true">e</span><span>EjariFlow<span style="color:#8bead5">.</span></span></div>
-  <div class="top-right"><span class="top-chip"><span class="dot"></span>CONCEPT PROPOSAL</span><button class="soundless" type="button" id="sourceBtn" aria-label="Show cost sources">Sources ↗</button></div>
+  <div class="top-right"><span class="top-chip"><span class="dot"></span>CONCEPT PROPOSAL</span><button class="soundless" type="button" id="sourceBtn" aria-label="Show cost sources">Sources ↗</button><button class="immersive-trigger" id="immersiveBtn" type="button" aria-label="View full screen" title="Full screen / Install presentation">⛶ <span class="immersive-label">Full screen</span></button></div>
 </header>
 <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
 <div class="dots-nav" id="dotsNav" aria-label="Choose presentation page"></div>
@@ -232,6 +277,42 @@ $('simNext').addEventListener('click',()=>{stopSim();simIdx=Math.min(stages.leng
 const fmt=n=>Math.round(n).toLocaleString('en-AE');function updateCosts(){let n=+$('volumeRange').value;let staff=$('staffToggle').checked?9*n:0;let gov=$('govToggle').checked?177.75*n:0;let a=2643+2*n+staff+gov,b=92+5*n+staff+gov;let extra=staff+gov;$('volumeLabel').textContent=fmt(n);$('costA').innerHTML=`${fmt(a)} <span>AED/mo</span>`;$('costB').innerHTML=`${fmt(b)} <span>AED/mo</span>`;$('unitA').textContent=`AED ${(a/n).toFixed(2)} / case`;$('unitB').textContent=`AED ${(b/n).toFixed(2)} / case`;$('fixedA').textContent=`2,643 fixed + ${fmt(2*n+extra)} usage`;$('fixedB').textContent=`92 fixed + ${fmt(5*n+extra)} usage`;$('barAText').textContent=`AED ${fmt(a)}`;$('barBText').textContent=`AED ${fmt(b)}`;let m=Math.max(a,b);$('barA').style.width=(a/m*100)+'%';$('barB').style.width=(b/m*100)+'%';let diff=Math.abs(a-b);let cheaper=a<=b?'A · API':'B · Browser';$('calcCallout').innerHTML=`<b>At ${fmt(n)} requests/month</b>, Option ${cheaper} has a lower modeled monthly cost by <b>AED ${fmt(diff)}</b>. ${staff||gov?'The displayed total includes the optional costs you selected.':'Human work, government fees and browser-agent overages are excluded.'}`;}
 $('volumeRange').addEventListener('input',updateCosts);$('staffToggle').addEventListener('change',updateCosts);$('govToggle').addEventListener('change',updateCosts);
 renderStage();updateCosts();goto(0);window.EjariFlowDemo={goto,setRoute,renderStage,updateCosts};
+})();
+</script>
+
+<div class="immersive-dialog" id="immersiveDialog" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="immersiveTitle">
+  <div class="immersive-panel">
+    <div class="eyebrow">PRESENTATION MODE</div>
+    <h3 id="immersiveTitle">See every detail.<br><span class="gradient-text">Without browser bars.</span></h3>
+    <p>On an iPhone, Safari does not allow ordinary websites to remove the address and navigation bars. For the full-screen app experience:</p>
+    <ol>
+      <li>Open this link directly in <span class="emphasis">Safari</span> (not an in-app preview).</li>
+      <li>Tap <span class="emphasis">Share</span> (square with an upward arrow), then <span class="emphasis">Add to Home Screen</span>.</li>
+      <li>Tap <span class="emphasis">Add</span>, then launch the new <span class="emphasis">EjariFlow</span> icon from the Home Screen.</li>
+    </ol>
+    <p style="font-size:11px">On desktop browsers, the full-screen button requests browser full-screen directly.</p>
+    <button class="immersive-close" id="immersiveClose" type="button">Got it</button>
+  </div>
+</div>
+
+<script>
+(()=>{
+  const trigger=document.getElementById('immersiveBtn');
+  const dialog=document.getElementById('immersiveDialog');
+  const close=document.getElementById('immersiveClose');
+  if(!trigger||!dialog||!close)return;
+  const show=()=>{dialog.hidden=false;dialog.setAttribute('aria-hidden','false');close.focus()};
+  const hide=()=>{dialog.hidden=true;dialog.setAttribute('aria-hidden','true');trigger.focus()};
+  trigger.addEventListener('click',async()=>{
+    if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone){return;}
+    if(window.matchMedia('(min-width: 701px)').matches&&document.documentElement.requestFullscreen){
+      try{await document.documentElement.requestFullscreen();return;}catch(e){}
+    }
+    show();
+  });
+  close.addEventListener('click',hide);
+  dialog.addEventListener('click',e=>{if(e.target===dialog)hide()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!dialog.hidden)hide()});
 })();
 </script>
 </body>
